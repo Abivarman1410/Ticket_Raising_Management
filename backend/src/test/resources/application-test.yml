@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    show-sql: false
+
+  flyway:
+    enabled: false   # We use create-drop in tests, not flyway migrations
+
+app:
+  jwt:
+    secret: 7A7B8C9D0E1F2A3B4C5D6E7F8A9B0C1D2E3F4A5B6C7D8E9F0A1B2C3D4E5F6A7B
+    expiration-ms: 86400000
+
+logging:
+  level:
+    root: WARN
+    com.ticketmgmt: INFO

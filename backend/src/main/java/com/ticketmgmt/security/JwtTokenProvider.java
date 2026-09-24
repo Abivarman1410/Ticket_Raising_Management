@@ -39,7 +39,7 @@ public class JwtTokenProvider {
                 .claim("role", userPrincipal.getAuthorities().iterator().next().getAuthority())
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .signWith(signingKey, SignatureAlgorithm.HS512)
+                .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 

@@ -66,20 +66,20 @@ public class DataInitializer implements ApplicationRunner {
     }
 
     private void seedAccounts() {
-        if (userRepository.findByEmail("manager@company.com").isEmpty()) {
-            Role managerRole = roleRepository.findByName("MANAGER").orElseThrow();
-            User manager = User.builder()
-                    .employeeId("MGR001")
-                    .fullName("System Manager")
-                    .email("manager@company.com")
-                    .passwordHash(passwordEncoder.encode("Manager@123"))
-                    .contactNumber("9000000000")
-                    .role(managerRole)
-                    .isActive(true)
-                    .build();
-            userRepository.save(manager);
-            log.info("Seeded default manager account: manager@company.com / Manager@123");
-        }
+        Role managerRole = roleRepository.findByName("MANAGER").orElseThrow();
+        User manager = userRepository.findByEmail("manager@company.com").orElseGet(() -> 
+            User.builder()
+                .employeeId("MGR001")
+                .email("manager@company.com")
+                .role(managerRole)
+                .isActive(true)
+                .build()
+        );
+        manager.setFullName("System Manager");
+        manager.setContactNumber("9000000000");
+        manager.setPasswordHash(passwordEncoder.encode("Manager@123"));
+        userRepository.save(manager);
+        log.info("Seeded/Reset default manager account: manager@company.com / Manager@123");
 
         if (userRepository.findByEmail("employee@company.com").isEmpty()) {
             Role employeeRole = roleRepository.findByName("EMPLOYEE").orElseThrow();
@@ -94,6 +94,21 @@ public class DataInitializer implements ApplicationRunner {
                     .build();
             userRepository.save(employee);
             log.info("Seeded default employee account: employee@company.com / Employee@123");
+        }
+
+        if (userRepository.findByEmail("admin@company.com").isEmpty()) {
+            Role adminRole = roleRepository.findByName("ADMIN").orElseThrow();
+            User admin = User.builder()
+                    .employeeId("ADM001")
+                    .fullName("System Admin")
+                    .email("admin@company.com")
+                    .passwordHash(passwordEncoder.encode("Admin@123"))
+                    .contactNumber("9000000002")
+                    .role(adminRole)
+                    .isActive(true)
+                    .build();
+            userRepository.save(admin);
+            log.info("Seeded default admin account: admin@company.com / Admin@123");
         }
     }
 

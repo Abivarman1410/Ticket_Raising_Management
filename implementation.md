@@ -1,1106 +1,1320 @@
-Organization Ticket Management System
-Finalized System Requirements & Database Design
+# PROJECT DEVELOPMENT PROMPT
 
-Macha Abivarman! 🔥 Let's finalize your project into a proper Software Requirements Specification (SRS) + Database Design that you can use as the foundation for your React + Spring Boot + MySQL full-stack application.
-
-Your selected design is:
-
-Final Project Configuration
-Confirmed
-
-Frontend
-
-React.js
-
-Backend
-
-Spring Boot (Java)
-
-Database
-
-MySQL
-
-User Roles
-
-Employee, Admin, Manager
-
-Admin Categories
-
-Hardware + Software
-
-Assignment
-
-Round-robin
-
-Manager Visibility
-
-All organization tickets
-
-Resolution
-
-Employee confirmation + reopening
-
-Priority
-
-Low, Medium, High, Critical
-
-Login
-
-Role-selection portal
-
-Part 1: Complete System Requirements (SRS)
-1. Project title
+## Project Title
 
 Organization Ticket Management and Resolution System
 
-1.1 Project objective
+---
 
-The system provides a centralized platform for employees to report organizational problems, automatically assign tickets to the appropriate hardware or software admin using round-robin allocation, and allow managers to monitor the entire ticket lifecycle.
+# 1. ROLE AND RESPONSIBILITY
 
-The system will support:
+Act as a senior Java Spring Boot backend developer, software architect, database designer, and full-stack application engineer.
 
-Employee issue reporting.
+Your responsibility is to design and implement a production-oriented Organization Ticket Management System using:
 
-Automatic admin assignment.
+* Backend: Java Spring Boot
+* Database: MySQL
+* Frontend: React.js
+* API communication: REST APIs
+* Authentication: Spring Security with JWT
+* ORM: Spring Data JPA / Hibernate
+* Build tool: Maven
 
-Admin ticket resolution.
+The application will be used by an organization containing multiple employees, hardware admins, software admins, and managers.
 
-Employee resolution confirmation.
+The system must provide centralized ticket creation, automatic ticket assignment, issue resolution, employee confirmation, and organization-wide monitoring.
 
-Manager-wide ticket monitoring.
+Follow clean architecture, proper separation of concerns, secure authorization, database integrity, validation, and maintainable coding practices.
 
-Priority-based ticket management.
+---
 
-Ticket history and audit tracking.
+# 2. MOST IMPORTANT DEVELOPMENT CONDITION: BACKEND FIRST
 
-1.2 Problem statement
+THIS IS A STRICT REQUIREMENT.
 
-In an organization with many employees, hardware and software problems may be reported through informal channels such as messages, phone calls, or email. This can make it difficult to track ticket ownership, identify responsible admins, monitor pending issues, and verify whether problems have been resolved.
+## PHASE 1: COMPLETE BACKEND FIRST
 
-The proposed application centralizes these operations in a role-based ticket management system.
+Start the project by developing ONLY the Spring Boot backend and MySQL database.
 
-1.3 Scope
+Do NOT start React frontend development until all required backend functionality has been implemented, tested, and verified.
 
-In scope: Employee ticket creation, category-specific assignment, admin resolution, employee confirmation, manager dashboards, role-based security, ticket history, and priority management.
+During the backend phase:
 
-Out of initial scope: Automatic email notifications, mobile application, AI ticket classification, multi-company tenancy, and advanced SLA automation. These can be added later.
+* Do not create React components.
+* Do not build frontend dashboards.
+* Do not create frontend pages.
+* Do not implement frontend routing.
+* Do not integrate React with the backend.
+* Do not skip backend testing in order to start frontend work.
 
-Part 2: User Roles and Permissions
+Complete the backend independently using REST APIs, service logic, database operations, validation, authentication, authorization, and automated tests.
 
-The system has three primary roles. Hardware Admin and Software Admin are specializations of the Admin role.
+The backend must be usable through Postman, Swagger/OpenAPI, or another API testing tool before frontend development begins.
 
-2.1 Permission matrix
+## Backend completion criteria
 
-Function
+Before moving to frontend development, verify:
 
-	
+1. Project builds successfully.
+2. MySQL connection works.
+3. Database tables and relationships are created correctly.
+4. Authentication works.
+5. Role-based authorization works.
+6. Employee ticket creation works.
+7. Hardware and software category selection works.
+8. Automatic round-robin admin assignment works.
+9. Admin ticket management works.
+10. Resolution submission works.
+11. Employee confirmation and rejection work.
+12. Reopened ticket workflow works.
+13. Manager can view all organization tickets.
+14. Manager can manage admin accounts and category assignments.
+15. Priority filtering and ticket status filtering work.
+16. Validation and exception handling work.
+17. Concurrent ticket assignment is handled safely.
+18. Backend tests pass.
+19. API documentation is available.
+20. The complete backend is verified through API testing.
 
-Employee
+ONLY AFTER THESE REQUIREMENTS ARE COMPLETED AND VERIFIED SHOULD YOU START PHASE 2: REACT FRONTEND DEVELOPMENT.
 
-	
+If any backend requirement is incomplete, continue working on the backend rather than moving to frontend.
 
-Admin
+---
 
-	
+# 3. PROJECT OBJECTIVE
 
-Manager
+Build a centralized organization ticket management system where employees can report problems, the system automatically assigns tickets to suitable admins, admins resolve the issues, and managers monitor all ticket activities.
 
+The organization will have three main user roles:
 
+1. Employee
+2. Admin
+3. Manager
 
+The Admin role will have two issue categories:
 
-Login
+* Hardware Admin
+* Software Admin
 
-	
+When an employee raises a ticket, the employee must select the issue category.
 
-✓
+If the employee selects Hardware, the ticket must be assigned only to an eligible Hardware Admin.
 
-	
+If the employee selects Software, the ticket must be assigned only to an eligible Software Admin.
 
-✓
+The assignment must follow a round-robin strategy, ensuring sequential distribution among eligible active admins.
 
-	
+The manager must be able to configure and manage admin accounts, monitor all organization tickets, and view complete ticket resolution details.
 
-✓
+---
 
+# 4. USER ROLES AND RESPONSIBILITIES
 
+## 4.1 EMPLOYEE
 
+Employees are users who raise tickets regarding organizational problems.
 
-Create ticket
+Employee features:
 
-	
+* Login through the Employee portal.
+* Create new tickets.
+* Select issue category.
+* Enter issue title.
+* Enter detailed issue description.
+* Select ticket priority.
+* View own tickets.
+* View ticket status.
+* View assigned admin information permitted by the system.
+* View resolution details.
+* Confirm whether the issue is solved.
+* Reject the resolution if the issue is not solved.
+* Reopen the ticket if the problem persists.
+* View ticket history and updates.
 
-✓
+Employee restrictions:
+
+* Employee can view only their own tickets.
+* Employee cannot view other employees' tickets.
+* Employee cannot assign tickets manually.
+* Employee cannot change ticket ownership.
+* Employee cannot access manager-only APIs.
+* Employee cannot access unrelated admin tickets.
 
-	
+---
 
-Optional
+## 4.2 ADMIN
 
-	
+Admins are responsible for resolving tickets assigned to them.
+
+There are two types of admins:
+
+1. Hardware Admin
+2. Software Admin
+
+An admin must be assigned to one or more supported issue categories through the admin-category mapping.
+
+### Hardware Admin responsibilities
+
+* Login through the Hardware Admin portal.
+* View assigned hardware tickets.
+* View permitted employee information.
+* View issue title and description.
+* View ticket priority.
+* Update ticket status.
+* Add comments and investigation notes.
+* Work on the issue.
+* Submit resolution details.
+* Mark the ticket as resolved.
+* View reopened tickets assigned to them.
+* Continue working on reopened tickets.
 
-Optional
+### Software Admin responsibilities
 
+The Software Admin must have the same capabilities as the Hardware Admin, but software ticket assignments must be restricted to eligible software admins.
 
+Admin restrictions:
 
+* Admin cannot access all organization tickets by default.
+* Admin cannot access manager-only functionality.
+* Admin cannot modify another admin's tickets without authorization.
+* Admin cannot close tickets on behalf of employees.
+* Admin cannot bypass issue category restrictions.
+* Admin cannot mark a ticket as resolved without providing required resolution details.
+* Admin cannot assign tickets to an ineligible admin through a manipulated frontend request.
 
-View own tickets
+The backend must validate all admin permissions.
 
-	
+---
 
-✓
+## 4.3 MANAGER
 
-	
+The manager is responsible for organization-wide monitoring and administration.
 
-Optional
+Manager features:
 
-	
+### Admin management
 
-✓
+* Create admin accounts.
+* View admin accounts.
+* Update admin details where authorized.
+* Activate admin accounts.
+* Deactivate admin accounts.
+* Assign Hardware category to admins.
+* Assign Software category to admins.
+* View the number of active hardware admins.
+* View the number of active software admins.
+* View admin workload.
+* Configure and manage assignment settings.
+* Reassign existing tickets through an authorized workflow.
+* Ensure inactive admins do not receive new tickets.
 
+### Ticket monitoring
 
+The manager must be able to view ALL organization tickets.
 
+The manager must be able to see:
 
-View assigned tickets
+* Ticket number.
+* Employee name.
+* Employee ID.
+* Employee contact number, subject to data-access policy.
+* Issue category.
+* Issue title.
+* Issue description.
+* Priority.
+* Ticket status.
+* Assigned admin name.
+* Assigned admin employee ID.
+* Assignment date.
+* Assignment method.
+* Resolution details.
+* Resolution date.
+* Employee confirmation status.
+* Reopening information.
+* Ticket status history.
+* Assignment history.
 
-	
+### Manager dashboard
 
-—
+Display:
 
-	
+* Total number of tickets.
+* Open tickets.
+* Assigned tickets.
+* In-progress tickets.
+* Resolved tickets.
+* Tickets awaiting employee confirmation.
+* Closed tickets.
+* Reopened tickets.
+* Tickets by Hardware and Software category.
+* Tickets by priority.
+* Admin workload summary.
+* Tickets with no available admin.
+* Recent ticket activities.
 
-✓
+The manager has organization-wide visibility, but sensitive personal data must be returned only where necessary and authorized.
 
-	
+---
 
-✓
+# 5. LOGIN AND AUTHENTICATION REQUIREMENTS
 
+The frontend will eventually provide four role-selection portals:
 
+1. Employee
+2. Hardware Admin
+3. Software Admin
+4. Manager
 
+The role-selection buttons are for directing users to the relevant login experience.
 
-Update ticket status
+IMPORTANT SECURITY REQUIREMENT:
 
-	
+Selecting a login button must not grant the selected role.
 
-—
+The backend must authenticate the actual user account and validate its role and permissions.
 
-	
+For example:
 
-✓
+* A user selecting Hardware Admin must not gain admin privileges unless their authenticated account has the Admin role and appropriate category authorization.
+* A regular employee must not access manager APIs by selecting the Manager button.
+* A Software Admin must not access unauthorized hardware operations.
 
-	
+Implement:
 
-Controlled
+* Spring Security.
+* JWT-based authentication.
+* Secure password hashing using BCrypt or an appropriate password encoder.
+* Authentication endpoint.
+* JWT validation.
+* Role-based authorization.
+* Proper unauthorized and forbidden responses.
+* Secure token handling.
+* Account active/inactive validation.
 
+Suggested roles:
 
+* ROLE_EMPLOYEE
+* ROLE_ADMIN
+* ROLE_MANAGER
 
+Admin category must be handled separately from the general ADMIN role.
 
-Submit resolution
+Use authorization checks on protected backend endpoints.
 
-	
+---
 
-—
+# 6. ISSUE CATEGORIES
 
-	
+The initial system must support two issue categories:
 
-✓
+1. HARDWARE
+2. SOFTWARE
 
-	
+Examples of hardware issues:
 
-—
+* Laptop not powering on.
+* Keyboard not working.
+* Mouse not working.
+* Monitor failure.
+* Printer problem.
+* Hardware replacement request.
 
+Examples of software issues:
 
+* Application not opening.
+* Software installation problem.
+* Login issue in an application.
+* Application error.
+* Configuration issue.
+* Software access problem.
 
+The issue category must be stored in the database.
 
-Confirm resolution
+The category selected by the employee must be validated on the backend.
 
-	
+The category must determine the eligible admin assignment pool.
 
-✓
+---
 
-	
+# 7. TICKET CREATION REQUIREMENTS
 
-—
+Employees must be able to raise a ticket.
 
-	
+## Ticket form
 
-—
+Required fields:
 
+* Issue category.
+* Ticket title.
+* Detailed description.
+* Priority.
 
+System-generated fields:
 
+* Ticket ID.
+* Unique ticket number.
+* Employee ID.
+* Employee account reference.
+* Creation timestamp.
+* Initial status.
+* Assignment information.
+* Updated timestamp.
 
-Reopen ticket
+Employee information must be retrieved from the authenticated user account instead of trusting employee-provided identity fields.
 
-	
+The system must validate:
 
-✓
+* Title is not blank.
+* Description is not blank.
+* Category is valid and active.
+* Priority is valid.
+* Employee account is active.
+* Request is authorized.
+* Ticket number is unique.
 
-	
+When the ticket is successfully created:
 
-—
+1. Save the ticket.
+2. Determine the eligible admin pool based on the category.
+3. Assign the ticket using the round-robin strategy if an eligible admin exists.
+4. Record assignment details.
+5. Update the ticket status to ASSIGNED.
+6. Store the assignment timestamp.
+7. Record the assignment event in the assignment history.
+8. Return the created ticket response.
 
-	
+If no eligible admin is available, do not silently assign the ticket to an incorrect category or inactive admin.
 
-Controlled
+Handle the unassigned case with a clearly defined backend behavior, such as keeping the ticket OPEN with an assignment-pending reason, and make it visible to the manager.
 
+---
 
+# 8. ROUND-ROBIN ASSIGNMENT SYSTEM
 
+This is one of the main business features of the application.
 
-View all tickets
+The system must maintain two separate assignment pools:
 
-	
+* Hardware Admin Pool.
+* Software Admin Pool.
 
-—
+When an employee creates a Hardware ticket, only eligible active Hardware Admins may be selected.
 
-	
+When an employee creates a Software ticket, only eligible active Software Admins may be selected.
 
-—
+## Example
 
-	
+Manager configures:
 
-✓
+Hardware Admins:
 
+* H001
+* H002
+* H003
 
+Software Admins:
 
+* S001
+* S002
 
-Manage admin accounts
+Hardware ticket sequence:
 
-	
+Ticket 1 → H001
+Ticket 2 → H002
+Ticket 3 → H003
+Ticket 4 → H001
+Ticket 5 → H002
 
-—
+Software ticket sequence:
 
-	
+Ticket 1 → S001
+Ticket 2 → S002
+Ticket 3 → S001
+Ticket 4 → S002
 
-—
+The round-robin sequence must be independent for each issue category.
 
-	
+## Assignment requirements
 
-✓
+* Use active eligible admins only.
+* Do not assign Hardware tickets to Software-only admins.
+* Do not assign Software tickets to Hardware-only admins.
+* Do not assign new tickets to inactive admins.
+* Preserve existing ticket assignments.
+* Record the selected admin.
+* Record assignment date.
+* Record assignment method.
+* Support manager-authorized reassignment.
+* Maintain assignment history.
 
+## Concurrency requirement
 
+The system must safely handle multiple employees raising tickets at the same time.
 
+Do not use an unsafe read-then-update process that can cause duplicate assignment cursor selection.
 
-Configure assignment
+Use appropriate Spring transaction management and MySQL locking or another safe concurrency strategy.
 
-	
+The assignment process must:
 
-—
+1. Acquire the relevant category assignment state safely.
+2. Identify eligible active admins in a deterministic order.
+3. Select the next admin according to round-robin rules.
+4. Persist the ticket assignment.
+5. Update the assignment cursor.
+6. Record the assignment event.
+7. Commit the transaction.
 
-	
+If an assignment operation fails, ensure that the database does not leave inconsistent ticket and assignment state.
 
-—
+---
 
-	
+# 9. TICKET STATUS WORKFLOW
 
-✓
+Use the following statuses:
 
+* OPEN
+* ASSIGNED
+* IN_PROGRESS
+* RESOLVED
+* CLOSED
+* REOPENED
 
+## Workflow
 
-
-View organization statistics
-
-	
-
-—
-
-	
-
-Limited
-
-	
-
-✓
-
-
-
-
-Manage system settings
-
-	
-
-—
-
-	
-
-—
-
-	
-
-✓
-
-Security rule: The backend determines permissions from the authenticated account and its assigned roles. Selecting a login button must never grant access to another role.
-
-2.2 Employee requirements
-Functional requirements
-
-Employee can log in through the Employee portal.
-
-Employee can create a new ticket.
-
-Employee must select an issue category:
-
-Hardware
-
-Software
-
-Employee can enter the issue title and description.
-
-Employee can set the issue priority, subject to the chosen priority policy.
-
-Employee can view their own tickets and current statuses.
-
-Employee can view assigned admin details that the organization permits them to see.
-
-Employee can review admin resolution notes.
-
-Employee can confirm that the problem is solved.
-
-Employee can indicate that the issue is not solved, which reopens the ticket.
-
-Employee can view ticket history and timestamps.
-
-Employee ticket form
-
-Field
-
-	
-
-Required
-
-	
-
-Description
-
-
-
-
-Issue category
-
-	
-
-Yes
-
-	
-
-Hardware or Software
-
-
-
-
-Title
-
-	
-
-Yes
-
-	
-
-Short problem summary
-
-
-
-
-Description
-
-	
-
-Yes
-
-	
-
-Detailed issue description
-
-
-
-
-Priority
-
-	
-
-Yes
-
-	
-
-Low / Medium / High / Critical
-
-
-
-
-Attachment
-
-	
-
-Optional
-
-	
-
-Supporting screenshot or document
-
-
-
-
-Contact information
-
-	
-
-System
-
-	
-
-Retrieved from user profile
-
-Recommendation: Do not require employees to re-enter their employee ID and contact number on every ticket. Fetch those details from the authenticated user account and preserve relevant historical information.
-
-2.3 Admin requirements
-Hardware Admin
-
-Log in through the Hardware Admin portal.
-
-View assigned hardware tickets.
-
-View employee details authorized for support.
-
-Change ticket status to In Progress.
-
-Add comments or investigation notes.
-
-Submit resolution details.
-
-Mark a ticket as Resolved.
-
-View tickets that have been reopened.
-
-Software Admin
-
-The same functionality applies to software tickets, but the admin should only receive tickets belonging to the supported category unless explicitly authorized for multiple categories.
-
-Admin restrictions
-
-Admin cannot view all organizational tickets by default.
-
-Admin cannot change another admin's ticket assignment unless an authorized workflow allows it.
-
-Admin cannot mark a ticket as Closed on behalf of the employee.
-
-Admin cannot modify the ticket creator after creation.
-
-Admin cannot bypass category assignment rules through the frontend.
-
-2.4 Manager requirements
-
-The manager has organization-wide monitoring access.
-
-Admin management
-
-Create admin accounts.
-
-Assign admin category: Hardware or Software.
-
-Activate or deactivate admins.
-
-View the number of active admins in each category.
-
-View assigned workload.
-
-Configure the round-robin assignment pool.
-
-Reassign existing tickets through an authorized workflow, if needed.
-
-Ticket management
-
-View all organization tickets.
-
-Filter by issue category.
-
-Filter by priority.
-
-Filter by status.
-
-Search by ticket number, employee ID, or assigned admin.
-
-View assignment details.
-
-View resolution details.
-
-View employee confirmation.
-
-Track reopened tickets.
-
-Dashboard metrics
-
-Total tickets.
-
-Open tickets.
-
-In-progress tickets.
-
-Resolved tickets awaiting employee confirmation.
-
-Closed tickets.
-
-Reopened tickets.
-
-Tickets grouped by priority.
-
-Tickets grouped by hardware/software category.
-
-Admin workload summary.
-
-Part 3: Complete Ticket Lifecycle
-3.1 Status definitions
-
-Use a controlled status enum in the backend.
-
-Status
-
-	
-
-Meaning
-
-
-
+Employee creates ticket:
 
 OPEN
 
-	
-
-Employee created a ticket, but assignment has not completed
-
-
-
+System assigns admin:
 
 ASSIGNED
 
-	
-
-Ticket is mapped to an eligible admin
-
-
-
+Admin starts working:
 
 IN_PROGRESS
 
-	
-
-Admin is working on the issue
-
-
-
+Admin submits solution:
 
 RESOLVED
 
-	
-
-Admin submitted a solution
-
-
-
+Employee confirms issue is solved:
 
 CLOSED
 
-	
-
-Employee confirmed the solution
-
-
-
+Employee says issue is not solved:
 
 REOPENED
 
-	
+Admin resumes work:
 
-Employee reported that the problem persists
+IN_PROGRESS
 
-Status transition rules
-Invalid or unsupported diagram.
-Business rules
+Admin submits a new solution:
 
-A ticket must have a valid employee creator.
+RESOLVED
 
-A ticket must have a supported category.
+Employee confirms:
 
-Only eligible active admins can receive new assignments.
+CLOSED
 
-Admins can submit resolution details only for tickets assigned to them, subject to authorized reassignment rules.
+## Status rules
 
-Employees can confirm or reject a resolution only for their own tickets.
+* A ticket must not be marked CLOSED solely by an admin.
+* An employee can confirm or reject a resolution for their own ticket.
+* Only authorized users can update status.
+* Status transitions must be validated by the backend.
+* Every status transition must be stored in a history table.
+* A ticket cannot be modified as if it were active after closure without an authorized workflow.
+* Reopened tickets must remain linked to their original ticket number.
+* Reopened tickets must preserve previous resolution and assignment history.
 
-A rejected resolution changes the ticket to REOPENED.
+The backend must prevent invalid status transitions.
 
-A ticket must not be closed solely because an admin marked it resolved.
+---
 
-Status changes must be recorded in a history table.
+# 10. ADMIN RESOLUTION SYSTEM
 
-A closed ticket should not be edited as if it were still active. A separate authorized reopen workflow may be added for post-closure issues.
+When an admin finishes working on a ticket, they must submit resolution details.
 
-The system should retain the original assigned admin even if a reopened ticket is reassigned.
+Required resolution information:
 
-Part 4: Round-Robin Assignment System
-4.1 Assignment rules
+* Ticket ID.
+* Admin who resolved the ticket.
+* Solution description.
+* Resolution timestamp.
+* Resolution status.
 
-The system has two separate assignment pools:
+The admin must not be able to submit a resolution for a ticket they are not authorized to manage.
 
-Hardware Admin Pool
+When the admin submits a resolution:
 
-Software Admin Pool
+1. Validate ticket ownership or authorized assignment.
+2. Validate required resolution details.
+3. Save the resolution.
+4. Update ticket status to RESOLVED.
+5. Set the resolution timestamp.
+6. Record the status change.
+7. Return the updated ticket details.
 
-When a ticket is created:
+The ticket remains pending employee confirmation.
 
-Validate the category.
+---
 
-Retrieve active admins eligible for that category.
+# 11. EMPLOYEE CONFIRMATION AND REOPENING
 
-Acquire the assignment state safely.
+This is a mandatory feature.
 
-Select the next admin in the round-robin sequence.
+After the admin marks a ticket as RESOLVED, the employee must be able to review the solution.
 
-Assign the ticket.
+Employee actions:
 
-Update the assignment cursor.
+1. Confirm problem solved.
+2. Reject resolution because the issue is not solved.
 
-Save the ticket and assignment record within a transaction.
+## If employee confirms
 
-If no eligible admin is available, the ticket should remain unassigned or enter a clearly defined PENDING_ASSIGNMENT workflow. Since your current status list doesn't include this status, you can use OPEN with an assignment failure reason, or add a dedicated status later.
+* Save confirmation details.
+* Record confirmation timestamp.
+* Update ticket status to CLOSED.
+* Store confirmation decision.
+* Record the status change.
+* Preserve the resolution record.
 
-4.2 Example: Hardware round-robin
+## If employee rejects
 
-The manager configures three active hardware admins.
+* Save rejection details.
+* Record rejection timestamp.
+* Update ticket status to REOPENED.
+* Preserve the previous resolution.
+* Add a reason for rejection.
+* Return the ticket to the admin workflow.
 
-Hardware Admin Pool
-3 Active
+The system must ensure that only the ticket's owning employee can confirm or reject its resolution, unless an explicitly authorized alternative workflow is introduced.
 
-H001 — Arun
+---
 
-Admin 1
+# 12. PRIORITY MANAGEMENT
 
-H002 — Karthik
+The system must support four ticket priorities:
 
-Admin 2
+* LOW
+* MEDIUM
+* HIGH
+* CRITICAL
 
-H003 — Priya
+The priority must be stored in the database.
 
-Admin 3
-Assignment sequence
+Employees may select a priority, but the backend must validate the submitted value.
 
-Ticket T001
+The manager must be able to filter tickets by priority.
 
-H001
+The admin must be able to see the priority of assigned tickets.
 
-Ticket T002
+The manager dashboard must display priority-based statistics.
 
-H002
+Optional future functionality:
 
-Ticket T003
+* Priority escalation.
+* SLA deadline calculation.
+* Critical ticket notifications.
+* Manager approval for critical priority.
+* Automatic escalation of overdue tickets.
 
-H003
+Do not implement advanced SLA automation unless it is explicitly included in the current development scope.
 
-Ticket T004
+---
 
-H001
+# 13. DATABASE DESIGN
 
-Important implementation decision
+Use MySQL with proper relational design.
 
-Use an explicit assignment state per category rather than deriving the next admin from the total ticket count.
+Create the following tables:
 
-Why?
+1. roles
+2. users
+3. issue_categories
+4. admin_category_assignments
+5. assignment_configs
+6. tickets
+7. ticket_assignment_history
+8. ticket_status_history
+9. ticket_resolutions
+10. ticket_confirmations
+11. ticket_comments
 
-Admins can be added or removed.
+Use foreign keys, unique constraints, indexes, and suitable data types.
 
-Some admins can become inactive.
+## USERS
 
-Multiple employees can submit tickets at the same time.
+Fields:
 
-Existing assignments should not change when the pool changes.
+* id
+* employee_id
+* full_name
+* email
+* password_hash
+* contact_number
+* role_id
+* is_active
+* created_at
+* updated_at
 
-The next assignment must be safely coordinated in the database.
+## ROLES
 
-A database transaction with appropriate locking is needed to prevent duplicate assignment cursor updates under concurrent requests.
+Fields:
 
-Part 5: Database Design (MySQL)
-5.1 Database name
-CREATE DATABASE organization_ticket_management;
-
-USE organization_ticket_management;
-Database design principles
-
-Use primary keys for all core entities.
-
-Use foreign keys to enforce relationships.
-
-Use unique constraints for employee IDs, ticket numbers, and usernames/emails where applicable.
-
-Store timestamps in a consistent format.
-
-Use indexes for frequent queries.
-
-Avoid storing derived information such as total admin count in every ticket.
-
-Use transaction boundaries for ticket creation and assignment.
-
-5.2 Entity Relationship Diagram
-Invalid or unsupported diagram.
-Entity overview
-
-Entity
-
-	
-
-Purpose
-
-
-
-
-roles
-
-	
-
-Defines employee, admin, and manager roles
-
-
-
-
-users
-
-	
-
-Stores all user accounts
-
-
-
-
-issue_categories
-
-	
-
-Defines hardware and software issue types
-
-
-
-
-admin_category_assignments
-
-	
-
-Links admins to supported categories
-
-
-
-
-assignment_configs
-
-	
-
-Stores assignment cursor per category
-
-
-
-
-tickets
-
-	
-
-Main ticket record
-
-
-
-
-ticket_status_history
-
-	
-
-Historical status changes
-
-
-
-
-ticket_resolutions
-
-	
-
-Admin-provided resolution details
-
-
-
-
-ticket_confirmations
-
-	
-
-Employee confirmation decisions
-
-
-
-
-ticket_comments
-
-	
-
-Ticket discussion
-
-
-
-
-ticket_assignment_history
-
-	
-
-Assignment audit trail
-
-Part 6: SQL Table Structure
-
-The following schema is a recommended starting design. You can implement it using Spring Data JPA entities and migrations (Flyway or Liquibase).
-
-6.1 Roles
-CREATE TABLE roles (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL UNIQUE
-);
+* id
+* name
 
 Initial roles:
 
-INSERT INTO roles (name)
-VALUES ('EMPLOYEE'), ('ADMIN'), ('MANAGER');
+* EMPLOYEE
+* ADMIN
+* MANAGER
 
-The admin category (Hardware or Software) should be modeled separately from the general role.
+## ISSUE_CATEGORIES
 
-6.2 Users
-CREATE TABLE users (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+Fields:
 
-    employee_id VARCHAR(50) NOT NULL UNIQUE,
+* id
+* name
+* description
+* is_active
 
-    full_name VARCHAR(150) NOT NULL,
+Initial categories:
 
-    email VARCHAR(150) NOT NULL UNIQUE,
+* HARDWARE
+* SOFTWARE
 
-    password_hash VARCHAR(255) NOT NULL,
+## ADMIN_CATEGORY_ASSIGNMENTS
 
-    contact_number VARCHAR(20),
+Fields:
 
-    role_id BIGINT NOT NULL,
+* id
+* admin_id
+* category_id
+* is_active
+* created_at
 
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+Rules:
 
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+* Admin must have ADMIN role.
+* Admin-category relationship must be unique.
+* Only active eligible mappings participate in new assignment selection.
+* Category eligibility must be checked in backend logic.
 
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
+## ASSIGNMENT_CONFIGS
 
-    CONSTRAINT fk_users_role
-        FOREIGN KEY (role_id)
-        REFERENCES roles(id)
-);
-Design notes
+Fields:
 
-employee_id can be used for employees and admins if your organization uses employee IDs for all staff.
+* id
+* category_id
+* next_sequence
+* assignment_strategy
+* updated_at
 
-For a manager or other account without an employee ID, you can either retain a separate unique username field or define the identifier policy according to your organization.
+Rules:
 
-password_hash must store a secure password hash, not a plaintext password.
+* One assignment configuration per category.
+* Assignment strategy initially ROUND_ROBIN.
+* Assignment state must be updated safely under concurrency.
 
-is_active controls whether an account can log in and receive assignments.
+## TICKETS
 
-6.3 Issue categories
-CREATE TABLE issue_categories (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+Fields:
 
-    name VARCHAR(50) NOT NULL UNIQUE,
+* id
+* ticket_number
+* employee_id
+* category_id
+* assigned_admin_mapping_id or a suitable assignment reference
+* title
+* description
+* priority
+* status
+* created_at
+* assigned_at
+* resolved_at
+* closed_at
+* updated_at
 
-    description VARCHAR(255),
+Rules:
 
-    is_active BOOLEAN NOT NULL DEFAULT TRUE
-);
+* Ticket number unique.
+* Employee must exist.
+* Category must exist.
+* Assignment must be valid.
+* Ticket status must be controlled.
+* Priority must be controlled.
 
-Initial values:
+## TICKET_ASSIGNMENT_HISTORY
 
-INSERT INTO issue_categories (name, description)
-VALUES
-('HARDWARE', 'Physical equipment and device issues'),
-('SOFTWARE', 'Applications and software-related issues');
+Fields:
 
-You can expand categories later if needed, such as Network, Access, or Facilities, but the initial project will support Hardware and Software.
+* id
+* ticket_id
+* assigned_admin_id
+* category_id
+* assigned_by_user_id
+* assignment_method
+* assigned_at
+* unassigned_at
+* is_current
 
-6.4 Admin category assignments
+This table must preserve the ticket's assignment history.
 
-This table maps admin accounts to the issue categories they are eligible to handle.
+## TICKET_STATUS_HISTORY
 
-CREATE TABLE admin_category_assignments (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+Fields:
 
-    admin_id BIGINT NOT NULL,
+* id
+* ticket_id
+* previous_status
+* new_status
+* changed_by_user_id
+* change_reason
+* changed_at
 
-    category_id BIGINT NOT NULL,
+Record every status transition.
 
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+## TICKET_RESOLUTIONS
 
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+Fields:
 
-    UNIQUE (admin_id, category_id),
+* id
+* ticket_id
+* resolved_by
+* solution_description
+* resolved_at
 
-    CONSTRAINT fk_admin_assignment_admin
-        FOREIGN KEY (admin_id)
-        REFERENCES users(id),
+A ticket can have multiple resolution records over its lifecycle if it is reopened and resolved again, or use a versioned resolution approach.
 
-    CONSTRAINT fk_admin_assignment_category
-        FOREIGN KEY (category_id)
-        REFERENCES issue_categories(id)
-);
-Business rules
+## TICKET_CONFIRMATIONS
 
-Only users with the Admin role should be added as admins.
+Fields:
 
-An admin can have one or both categories if the system supports that.
+* id
+* ticket_id
+* employee_id
+* decision
+* reason
+* confirmed_at
 
-For your initial implementation, each admin may be assigned to one category.
+Decision values:
 
-The backend must validate role and category eligibility before creating or updating this mapping.
+* CONFIRMED
+* REJECTED
 
-This table is more flexible than hardcoding separate hardware_admin_id and software_admin_id columns.
+## TICKET_COMMENTS
 
-6.5 Assignment configuration
+Fields:
 
-Use one assignment configuration record per category.
+* id
+* ticket_id
+* user_id
+* comment_text
+* created_at
+* updated_at
 
-CREATE TABLE assignment_configs (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+Use appropriate authorization rules for viewing and adding comments.
 
-    category_id BIGINT NOT NULL UNIQUE,
+---
 
-    next_sequence BIGINT NOT NULL DEFAULT 0,
+# 14. BACKEND ARCHITECTURE
 
-    assignment_strategy VARCHAR(30) NOT NULL
-        DEFAULT 'ROUND_ROBIN',
+Use a layered Spring Boot architecture.
 
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
+Suggested package structure:
 
-    CONSTRAINT fk_assignment_config_category
-        FOREIGN KEY (category_id)
-        REFERENCES issue_categories(id)
-);
-Why next_sequence?
+backend/
+└── src/main/java/com/example/ticket/
+├── controller/
+├── service/
+├── repository/
+├── entity/
+├── dto/
+├── mapper/
+├── security/
+├── exception/
+├── config/
+└── enums/
 
-It stores the state used by the assignment engine. The implementation can use this value in a transaction to select the next eligible admin and update the cursor.
+## Responsibilities
 
-Concurrency note: The assignment cursor should be updated using a safe transaction strategy. The exact algorithm needs to account for active admin membership, category-specific ordering, and concurrent ticket creation.
+### Controller
 
-6.6 Tickets
+* Receive HTTP requests.
+* Validate request format.
+* Call service layer.
+* Return appropriate HTTP responses.
+* Avoid placing business logic in controllers.
 
-This is the core table.
+### Service
 
-CREATE TABLE tickets (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+* Implement business logic.
+* Validate role permissions.
+* Handle ticket creation.
+* Handle assignment logic.
+* Handle status transitions.
+* Handle resolution workflow.
+* Handle manager administration.
+* Define transaction boundaries.
 
-    ticket_number VARCHAR(30) NOT NULL UNIQUE,
+### Repository
 
-    employee_id BIGINT NOT NULL,
+* Implement database access.
+* Use Spring Data JPA.
+* Add custom queries where required.
+* Support category-based ticket retrieval.
+* Support manager ticket filtering.
+* Support safe assignment-state retrieval.
 
-    category_id BIGINT NOT NULL,
+### DTO
 
-    assigned_admin_mapping_id BIGINT NULL,
+Use request and response DTOs instead of exposing JPA entities directly.
 
-    title VARCHAR(200) NOT NULL,
+Suggested DTOs:
 
-    description TEXT NOT NULL,
+* LoginRequest
+* LoginResponse
+* CreateTicketRequest
+* TicketResponse
+* UpdateTicketStatusRequest
+* SubmitResolutionRequest
+* TicketConfirmationRequest
+* AddCommentRequest
+* CreateAdminRequest
+* UpdateAdminCategoryRequest
+* ManagerTicketFilterRequest
 
-    priority ENUM(
-        'LOW',
-        'MEDIUM',
-        'HIGH',
-        'CRITICAL'
-    ) NOT NULL DEFAULT 'MEDIUM',
+---
 
-    status ENUM(
-        'OPEN',
-        'ASSIGNED',
-        'IN_PROGRESS',
-        'RESOLVED',
-        'CLOSED',
-        'REOPENED'
-    ) NOT NULL DEFAULT 'OPEN',
+# 15. SUGGESTED REST API ENDPOINTS
 
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+Implement secure REST APIs.
 
-    assigned_at TIMESTAMP NULL,
+## Authentication
 
-    resolved_at TIMESTAMP NULL,
+POST /api/auth/login
 
-    closed_at TIMESTAMP NULL,
+POST /api/auth/register (only if registration is part of the chosen account workflow)
 
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
+GET /api/auth/me
 
-    CONSTRAINT fk_tickets_employee
-        FOREIGN KEY (employee_id)
-        REFERENCES users(id),
+## Employee APIs
 
-    CONSTRAINT fk_tickets_category
-        FOREIGN KEY (category_id)
-        REFERENCES issue_categories(id),
+POST /api/employee/tickets
 
-    CONSTRAINT fk_tickets_admin_mapping
-        FOREIGN KEY (assigned_admin_mapping_id)
-        REFERENCES admin_category_assignments(id),
+GET /api/employee/tickets
 
-    INDEX idx_tickets_employee (employee_id),
+GET /api/employee/tickets/{ticketId}
 
-    INDEX idx_tickets_category_status (category_id, status),
+POST /api/employee/tickets/{ticketId}/confirmation
 
-    INDEX idx_tickets_assigned_status (assigned_admin_mapping_id, status),
+POST /api/employee/tickets/{ticketId}/rejection (or a unified confirmation endpoint)
 
-    INDEX idx_tickets_priority_status (priority, status)
-);
-Important correction for a production-ready design
+## Admin APIs
 
-A ticket's assigned admin mapping should remain auditable even if the admin is later deactivated or their category mapping changes. The ticket_assignment_history table below preserves the history. You may also add a direct assigned_admin_id reference on tickets if you want simplified queries, but the history table should remain the source of assignment events.
+GET /api/admin/tickets
 
-6.7 Ticket assignment history
-CREATE TABLE ticket_assignment_history (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+GET /api/admin/tickets/{ticketId}
 
-    ticket_id BIGINT NOT NULL,
+PATCH /api/admin/tickets/{ticketId}/status
 
-    assigned_admin_id BIGINT NOT NULL,
+POST /api/admin/tickets/{ticketId}/resolution
 
-    category_id BIGINT NOT NULL,
+POST /api/admin/tickets/{ticketId}/comments
 
-    assigned_by_user_id BIGINT NULL,
+GET /api/admin/tickets/{ticketId}/history
 
-    assignment_method VARCHAR(30) NOT NULL,
+## Manager APIs
 
-    assigned_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+GET /api/manager/tickets
 
-    unassigned_at TIMESTAMP NULL,
+GET /api/manager/tickets/{ticketId}
 
-    is_current BOOLEAN NOT NULL DEFAULT TRUE,
+GET /api/manager/dashboard
 
-    CONSTRAINT fk_assignment_history_ticket
-        FOREIGN KEY (ticket_id)
-        REFERENCES tickets(id),
+POST /api/manager/admins
 
-    CONSTRAINT fk_assignment_history_admin
-        FOREIGN KEY (assigned_admin_id)
-        REFERENCES users(id),
+GET /api/manager/admins
 
-    CONSTRAINT fk_assignment_history_category
-        FOREIGN KEY (category_id)
-        REFERENCES issue_categories(id),
+PATCH /api/manager/admins/{adminId}
 
-    CONSTRAINT fk_assignment_history_assigner
-        FOREIGN KEY (assigned_by_user_id)
-        REFERENCES users(id),
+POST /api/manager/admins/{adminId}/categories
 
-    INDEX idx_assignment_history_ticket (ticket_id),
+DELETE /api/manager/admins/{adminId}/categories/{categoryId}
 
-    INDEX idx_assignment_history_admin (assigned_admin_id)
-);
-Example
-Ticket TKT-1001
-    ↓
-Assigned to H001
-    ↓
-Admin unavailable
-    ↓
-Manager reassigns
-    ↓
-Assigned to H002
+GET /api/manager/assignment-configs
 
-The history records both assignments, allowing the manager to trace the ticket's ownership over time.
+PATCH /api/manager/assignment-configs/{categoryId}
+
+POST /api/manager/tickets/{ticketId}/reassign
+
+GET /api/manager/tickets/{ticketId}/history
+
+These endpoint names are proposed. Apply consistent naming and authorization rules.
+
+Do not expose manager endpoints to unauthorized users.
+
+---
+
+# 16. VALIDATION AND ERROR HANDLING
+
+Implement global exception handling using @RestControllerAdvice.
+
+Handle:
+
+* Validation errors.
+* Authentication failures.
+* Authorization failures.
+* Resource not found.
+* Invalid ticket status transitions.
+* Duplicate employee ID.
+* Duplicate email.
+* Duplicate ticket number.
+* Invalid issue category.
+* Inactive admin.
+* No eligible admin.
+* Invalid resolution submission.
+* Unauthorized employee confirmation.
+* Database constraint violations.
+* Concurrent assignment conflicts.
+
+Return a consistent error response format.
+
+Example:
+
+{
+"timestamp": "2026-09-24T10:30:00",
+"status": 400,
+"error": "VALIDATION_ERROR",
+"message": "Ticket title is required",
+"path": "/api/employee/tickets"
+}
+
+Do not expose stack traces, passwords, tokens, or sensitive internal details in API responses.
+
+---
+
+# 17. TESTING REQUIREMENTS
+
+Before frontend development, test the complete backend.
+
+## Unit tests
+
+Test:
+
+* Ticket creation.
+* Category validation.
+* Round-robin assignment.
+* Admin eligibility.
+* Status transitions.
+* Resolution submission.
+* Employee confirmation.
+* Employee rejection.
+* Manager authorization.
+* Admin authorization.
+
+## Integration tests
+
+Test:
+
+* MySQL database integration.
+* Repository queries.
+* Ticket creation and assignment transaction.
+* Status history persistence.
+* Resolution persistence.
+* Manager ticket retrieval.
+* Admin category mapping.
+
+## Security tests
+
+Test:
+
+* Employee cannot access manager APIs.
+* Admin cannot access unauthorized manager APIs.
+* Software admin cannot receive unauthorized category tickets.
+* Employee cannot confirm another employee's ticket.
+* Inactive users cannot perform protected operations.
+* Unauthenticated requests are rejected.
+
+## Concurrency tests
+
+Test:
+
+* Multiple employees create tickets concurrently.
+* Assignment cursor updates remain consistent.
+* Tickets are assigned to eligible admins.
+* No invalid assignment state is produced.
+* Database transaction behavior is correct.
+
+Use JUnit 5, Mockito, Spring Boot Test, and appropriate integration test support.
+
+---
+
+# 18. API DOCUMENTATION
+
+Implement Swagger/OpenAPI documentation using springdoc-openapi or an appropriate solution.
+
+Document:
+
+* Authentication APIs.
+* Employee APIs.
+* Admin APIs.
+* Manager APIs.
+* Request bodies.
+* Response formats.
+* Error responses.
+* Authentication requirements.
+* Role restrictions.
+
+The backend must be understandable and testable independently of the frontend.
+
+---
+
+# 19. BACKEND DEVELOPMENT ORDER
+
+Follow this exact implementation order.
+
+### Step 1: Project setup
+
+* Create Spring Boot project.
+* Configure Maven.
+* Configure Java version.
+* Add required dependencies.
+* Configure MySQL.
+* Configure application profiles.
+
+### Step 2: Database and entities
+
+* Create entities.
+* Create enums.
+* Define relationships.
+* Add constraints.
+* Configure JPA mappings.
+* Set up migrations or schema management.
+
+### Step 3: Authentication and security
+
+* Implement users and roles.
+* Implement password hashing.
+* Implement login.
+* Implement JWT authentication.
+* Implement role-based authorization.
+
+### Step 4: Employee ticket creation
+
+* Create ticket DTOs.
+* Create ticket repository.
+* Implement ticket service.
+* Validate category and priority.
+* Persist employee ticket.
+* Implement ticket retrieval.
+
+### Step 5: Admin assignment
+
+* Implement admin-category mapping.
+* Implement assignment configuration.
+* Implement round-robin algorithm.
+* Implement transaction safety.
+* Implement assignment history.
+
+### Step 6: Admin workflow
+
+* Assigned ticket retrieval.
+* Status update.
+* Comments.
+* Resolution submission.
+* Status history.
+
+### Step 7: Employee confirmation
+
+* Confirmation endpoint.
+* Rejection endpoint or unified decision endpoint.
+* Closed workflow.
+* Reopened workflow.
+
+### Step 8: Manager workflow
+
+* Admin management.
+* Category mapping management.
+* Assignment configuration.
+* Organization-wide ticket listing.
+* Ticket filtering.
+* Dashboard metrics.
+* Reassignment workflow.
+
+### Step 9: Validation and testing
+
+* Global exceptions.
+* Unit tests.
+* Integration tests.
+* Security tests.
+* Concurrency tests.
+
+### Step 10: Backend verification
+
+* Run the application.
+* Test APIs.
+* Verify database persistence.
+* Verify authorization.
+* Verify assignment logic.
+* Verify all status transitions.
+* Verify manager dashboard data.
+* Fix all critical defects.
+
+DO NOT MOVE TO FRONTEND UNTIL THIS BACKEND PHASE IS COMPLETE.
+
+---
+
+# 20. FRONTEND DEVELOPMENT: ONLY AFTER BACKEND COMPLETION
+
+Once the entire backend has been implemented, tested, and verified, start the React frontend.
+
+Use React.js.
+
+Frontend development must consume the completed backend REST APIs rather than implementing duplicate business logic.
+
+## Frontend pages
+
+### Login
+
+* Employee login portal.
+* Hardware Admin login portal.
+* Software Admin login portal.
+* Manager login portal.
+
+### Employee dashboard
+
+* Create ticket.
+* My tickets.
+* Ticket details.
+* Resolution details.
+* Confirm solved.
+* Reject resolution.
+* Reopened ticket information.
+
+### Hardware Admin dashboard
+
+* Assigned hardware tickets.
+* Ticket details.
+* Status update.
+* Resolution form.
+* Comments.
+* Reopened tickets.
+
+### Software Admin dashboard
+
+Same as Hardware Admin dashboard with software-specific assignment and access.
+
+### Manager dashboard
+
+* All tickets.
+* Ticket filters.
+* Admin management.
+* Category management.
+* Assignment configuration.
+* Workload statistics.
+* Ticket history.
+* Resolution monitoring.
+
+## Frontend security
+
+* Use authenticated API requests.
+* Handle expired tokens.
+* Do not rely on frontend-only role restrictions.
+* Do not expose unauthorized actions through UI controls.
+* Ensure backend authorization remains the source of truth.
+
+---
+
+# 21. CODING STANDARDS
+
+Follow these rules throughout development:
+
+* Use clean, readable Java code.
+* Follow SOLID principles where appropriate.
+* Use DTOs for API boundaries.
+* Avoid business logic in controllers.
+* Use meaningful class and method names.
+* Use constructor injection.
+* Use transactions where necessary.
+* Validate all user inputs.
+* Do not hardcode admin IDs.
+* Do not hardcode assignment sequences.
+* Avoid unnecessary duplication.
+* Use consistent API response formats.
+* Add useful comments only where needed.
+* Do not silently ignore exceptions.
+* Never store plaintext passwords.
+* Do not commit secrets to source control.
+* Do not implement fake success responses.
+* Do not claim features are completed without testing them.
+
+---
+
+# 22. RESPONSE FORMAT DURING DEVELOPMENT
+
+Follow this format whenever you complete a development step.
+
+## Step completed
+
+Explain what was implemented.
+
+## Files created or modified
+
+List all files and their purposes.
+
+## Implementation explanation
+
+Explain the business logic and technical design.
+
+## Code
+
+Provide complete code for the requested implementation.
+
+## Database changes
+
+Mention new tables, columns, constraints, indexes, or migrations.
+
+## API details
+
+Explain endpoints, request bodies, responses, and authorization.
+
+## Testing
+
+Mention tests created and their results. Do not claim tests passed unless they were actually executed.
+
+## Next step
+
+Suggest the next backend task in the defined development order.
+
+IMPORTANT:
+
+* Do not skip implementation steps.
+* Do not move to frontend before backend completion.
+* If requirements are ambiguous, identify the ambiguity and make a documented, reasonable assumption or ask for clarification.
+* If an implementation has limitations, explain them honestly.
+* Maintain consistency with all previously implemented features.
+* Do not remove existing working features without explicit instruction.
+
+---
+
+# FINAL INSTRUCTION
+
+Build this Organization Ticket Management System systematically.
+
+FIRST: Complete the entire Spring Boot backend and MySQL database implementation.
+
+SECOND: Test and verify every backend requirement, including security, ticket creation, category-specific round-robin assignment, resolution workflow, employee confirmation, reopening, manager visibility, and data integrity.
+
+THIRD: Only after the backend is fully implemented and verified, begin React frontend development.
+
+Do not start frontend development early.
+
+Start by explaining the backend architecture, confirming the development plan, and implementing the first backend step: project setup and database configuration.
+
+Then proceed step by step until the complete backend is finished.

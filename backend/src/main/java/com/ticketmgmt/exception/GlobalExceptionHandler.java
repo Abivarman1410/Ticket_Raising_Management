@@ -90,7 +90,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleGeneral(Exception ex, HttpServletRequest request) {
         log.error("Unhandled exception at {}: {}", request.getRequestURI(), ex.getMessage(), ex);
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR",
-                "An unexpected error occurred", request.getRequestURI());
+                ex.getMessage() != null ? ex.getMessage() : "NullPointerException or unexpected error", request.getRequestURI());
     }
 
     private ResponseEntity<ApiErrorResponse> build(HttpStatus status, String error,

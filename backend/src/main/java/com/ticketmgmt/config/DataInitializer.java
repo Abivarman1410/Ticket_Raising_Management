@@ -96,19 +96,34 @@ public class DataInitializer implements ApplicationRunner {
             log.info("Seeded default employee account: employee@company.com / Employee@123");
         }
 
-        if (userRepository.findByEmail("admin@company.com").isEmpty()) {
+        if (userRepository.findByEmail("hardware_admin@company.com").isEmpty()) {
             Role adminRole = roleRepository.findByName("ADMIN").orElseThrow();
-            User admin = User.builder()
+            User hwAdmin = User.builder()
                     .employeeId("ADM001")
-                    .fullName("System Admin")
-                    .email("admin@company.com")
+                    .fullName("Hardware Admin")
+                    .email("hardware_admin@company.com")
                     .passwordHash(passwordEncoder.encode("Admin@123"))
                     .contactNumber("9000000002")
                     .role(adminRole)
                     .isActive(true)
                     .build();
-            userRepository.save(admin);
-            log.info("Seeded default admin account: admin@company.com / Admin@123");
+            userRepository.save(hwAdmin);
+            log.info("Seeded default admin account: hardware_admin@company.com / Admin@123");
+        }
+
+        if (userRepository.findByEmail("software_admin@company.com").isEmpty()) {
+            Role adminRole = roleRepository.findByName("ADMIN").orElseThrow();
+            User swAdmin = User.builder()
+                    .employeeId("ADM002")
+                    .fullName("Software Admin")
+                    .email("software_admin@company.com")
+                    .passwordHash(passwordEncoder.encode("Admin@123"))
+                    .contactNumber("9000000003")
+                    .role(adminRole)
+                    .isActive(true)
+                    .build();
+            userRepository.save(swAdmin);
+            log.info("Seeded default admin account: software_admin@company.com / Admin@123");
         }
     }
 

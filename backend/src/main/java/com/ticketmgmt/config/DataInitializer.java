@@ -99,7 +99,7 @@ public class DataInitializer implements ApplicationRunner {
         if (userRepository.findByEmail("hardware_admin@company.com").isEmpty()) {
             Role adminRole = roleRepository.findByName("ADMIN").orElseThrow();
             User hwAdmin = User.builder()
-                    .employeeId("ADM001")
+                    .employeeId("ADM002")
                     .fullName("Hardware Admin")
                     .email("hardware_admin@company.com")
                     .passwordHash(passwordEncoder.encode("Admin@123"))
@@ -114,7 +114,7 @@ public class DataInitializer implements ApplicationRunner {
         if (userRepository.findByEmail("software_admin@company.com").isEmpty()) {
             Role adminRole = roleRepository.findByName("ADMIN").orElseThrow();
             User swAdmin = User.builder()
-                    .employeeId("ADM002")
+                    .employeeId("ADM003")
                     .fullName("Software Admin")
                     .email("software_admin@company.com")
                     .passwordHash(passwordEncoder.encode("Admin@123"))

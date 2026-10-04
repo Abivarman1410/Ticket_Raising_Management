@@ -25,6 +25,7 @@ public class DataInitializer implements ApplicationRunner {
     private final UserRepository             userRepository;
     private final IssueCategoryRepository    issueCategoryRepository;
     private final AssignmentConfigRepository assignmentConfigRepository;
+    private final AdminCategoryAssignmentRepository adminCategoryAssignmentRepository;
     private final PasswordEncoder            passwordEncoder;
 
     @Override
@@ -96,9 +97,10 @@ public class DataInitializer implements ApplicationRunner {
             log.info("Seeded default employee account: employee@company.com / Employee@123");
         }
 
-        if (userRepository.findByEmail("hardware_admin@company.com").isEmpty()) {
-            Role adminRole = roleRepository.findByName("ADMIN").orElseThrow();
-            User hwAdmin = User.builder()
+        // HARDWARE ADMIN
+        Role adminRole = roleRepository.findByName("ADMIN").orElseThrow();
+        User hwAdmin = userRepository.findByEmail("hardware_admin@company.com").orElseGet(() -> {
+            User newUser = User.builder()
                     .employeeId("ADM002")
                     .fullName("Hardware Admin")
                     .email("hardware_admin@company.com")
@@ -107,13 +109,24 @@ public class DataInitializer implements ApplicationRunner {
                     .role(adminRole)
                     .isActive(true)
                     .build();
-            userRepository.save(hwAdmin);
-            log.info("Seeded default admin account: hardware_admin@company.com / Admin@123");
+            return userRepository.save(newUser);
+        });
+
+        IssueCategory hwCategory = issueCategoryRepository.findByName("HARDWARE").orElseThrow();
+        if (adminCategoryAssignmentRepository.findActiveAdminsForCategory(hwCategory.getId()).stream()
+                .noneMatch(mapping -> mapping.getAdmin().getId().equals(hwAdmin.getId()))) {
+            adminCategoryAssignmentRepository.save(AdminCategoryAssignment.builder()
+                    .admin(hwAdmin)
+                    .category(hwCategory)
+                    .isActive(true)
+                    .maxTickets(10)
+                    .build());
+            log.info("Mapped hardware_admin to HARDWARE category");
         }
 
-        if (userRepository.findByEmail("software_admin@company.com").isEmpty()) {
-            Role adminRole = roleRepository.findByName("ADMIN").orElseThrow();
-            User swAdmin = User.builder()
+        // SOFTWARE ADMIN
+        User swAdmin = userRepository.findByEmail("software_admin@company.com").orElseGet(() -> {
+            User newUser = User.builder()
                     .employeeId("ADM003")
                     .fullName("Software Admin")
                     .email("software_admin@company.com")
@@ -122,8 +135,19 @@ public class DataInitializer implements ApplicationRunner {
                     .role(adminRole)
                     .isActive(true)
                     .build();
-            userRepository.save(swAdmin);
-            log.info("Seeded default admin account: software_admin@company.com / Admin@123");
+            return userRepository.save(newUser);
+        });
+
+        IssueCategory swCategory = issueCategoryRepository.findByName("SOFTWARE").orElseThrow();
+        if (adminCategoryAssignmentRepository.findActiveAdminsForCategory(swCategory.getId()).stream()
+                .noneMatch(mapping -> mapping.getAdmin().getId().equals(swAdmin.getId()))) {
+            adminCategoryAssignmentRepository.save(AdminCategoryAssignment.builder()
+                    .admin(swAdmin)
+                    .category(swCategory)
+                    .isActive(true)
+                    .maxTickets(10)
+                    .build());
+            log.info("Mapped software_admin to SOFTWARE category");
         }
     }
 

@@ -26,6 +26,7 @@ public class DataInitializer implements ApplicationRunner {
     private final IssueCategoryRepository    issueCategoryRepository;
     private final AssignmentConfigRepository assignmentConfigRepository;
     private final AdminCategoryAssignmentRepository adminCategoryAssignmentRepository;
+    private final TicketRepository ticketRepository;
     private final PasswordEncoder            passwordEncoder;
 
     @Override
@@ -35,6 +36,7 @@ public class DataInitializer implements ApplicationRunner {
         seedCategories();
         seedAccounts();
         seedAssignmentConfigs();
+        seedTickets();
         log.info("DataInitializer: seed data verified/applied successfully.");
     }
 
@@ -160,5 +162,48 @@ public class DataInitializer implements ApplicationRunner {
                 log.info("Seeded assignment config for category: {}", category.getName());
             }
         });
+    }
+
+    private void seedTickets() {
+        if (ticketRepository.count() == 0) {
+            User employee = userRepository.findByEmail("employee@company.com").orElseThrow();
+            IssueCategory hwCategory = issueCategoryRepository.findByName("HARDWARE").orElseThrow();
+            IssueCategory swCategory = issueCategoryRepository.findByName("SOFTWARE").orElseThrow();
+
+            AdminCategoryAssignment hwMapping = adminCategoryAssignmentRepository.findActiveAdminsForCategory(hwCategory.getId()).get(0);
+            AdminCategoryAssignment swMapping = adminCategoryAssignmentRepository.findActiveAdminsForCategory(swCategory.getId()).get(0);
+
+            Ticket hwTicket = Ticket.builder()
+                    .ticketNumber("TKT-" + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd")) + "-HW001")
+                    .employee(employee)
+                    .category(hwCategory)
+                    .title("Laptop screen flickering")
+                    .description("My laptop screen is flickering randomly.")
+                    .priority(com.ticketmgmt.enums.TicketPriority.HIGH)
+                    .businessUnit("IT")
+                    .workLocation("Office")
+                    .status(com.ticketmgmt.enums.TicketStatus.ASSIGNED)
+                    .assignedAdminMapping(hwMapping)
+                    .assignedAt(java.time.LocalDateTime.now())
+                    .build();
+            ticketRepository.save(hwTicket);
+
+            Ticket swTicket = Ticket.builder()
+                    .ticketNumber("TKT-" + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd")) + "-SW001")
+                    .employee(employee)
+                    .category(swCategory)
+                    .title("Cannot access VPN")
+                    .description("The VPN client fails to connect with an authentication error.")
+                    .priority(com.ticketmgmt.enums.TicketPriority.MEDIUM)
+                    .businessUnit("HR")
+                    .workLocation("Remote")
+                    .status(com.ticketmgmt.enums.TicketStatus.ASSIGNED)
+                    .assignedAdminMapping(swMapping)
+                    .assignedAt(java.time.LocalDateTime.now())
+                    .build();
+            ticketRepository.save(swTicket);
+
+            log.info("Seeded initial tickets for testing");
+        }
     }
 }

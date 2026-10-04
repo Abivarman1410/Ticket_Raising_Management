@@ -119,7 +119,6 @@ public class DataInitializer implements ApplicationRunner {
                     .admin(hwAdmin)
                     .category(hwCategory)
                     .isActive(true)
-                    .maxTickets(10)
                     .build());
             log.info("Mapped hardware_admin to HARDWARE category");
         }
@@ -145,7 +144,6 @@ public class DataInitializer implements ApplicationRunner {
                     .admin(swAdmin)
                     .category(swCategory)
                     .isActive(true)
-                    .maxTickets(10)
                     .build());
             log.info("Mapped software_admin to SOFTWARE category");
         }
